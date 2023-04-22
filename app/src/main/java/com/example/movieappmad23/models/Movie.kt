@@ -4,9 +4,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import java.util.*
-
-class Movie(
-    val id: String = UUID.randomUUID().toString(),
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+//Movie class in data class umgewandelt und Entity Annotiation vergeben für room
+@Entity
+data class Movie(
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val title: String = "",
     val year: String = "",
     val genre: List<Genre> = listOf(),
@@ -15,9 +19,9 @@ class Movie(
     val plot: String = "No plot available",
     val images: List<String> = listOf(),
     val rating: Double = 0.0,
-    initialIsFavorite: Boolean = false
+    var isFavorite: Boolean = false
 ) {
-    var isFavorite by mutableStateOf(initialIsFavorite)
+    //var isFavorite by mutableStateOf(initialIsFavorite)
 }
 
 fun getMovies(): List<Movie> {
