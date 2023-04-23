@@ -10,22 +10,28 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.movieappmad23.viewmodels.MoviesViewModel
+import com.example.movieappmad23.viewmodels.HomeScreenViewModel
 import com.example.movieappmad23.widgets.HomeTopAppBar
 import com.example.movieappmad23.widgets.MovieRow
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.movieappmad23.utils.InjectorUtils
 
 @Composable
-fun HomeScreen(
-    navController: NavController = rememberNavController(),
-    moviesViewModel: MoviesViewModel
-){
+fun HomeScreen(navController: NavController = rememberNavController()) {
+    val context = LocalContext.current
+    val viewModelFactory = remember { InjectorUtils.provideHomeScreenViewModelFactory(context) }
+    val homeScreenViewModel: HomeScreenViewModel by viewModel(factory = viewModelFactory)
+
     Scaffold(topBar = {
         HomeTopAppBar(
             title = "Home",
@@ -52,7 +58,7 @@ fun HomeScreen(
         MainContent(
             modifier = Modifier.padding(padding),
             navController = navController,
-            viewModel = moviesViewModel
+            viewModel = homeScreenViewModel
         )
     }
 }
@@ -61,7 +67,7 @@ fun HomeScreen(
 fun MainContent(
     modifier: Modifier,
     navController: NavController,
-    viewModel: MoviesViewModel
+    viewModel: HomeScreenViewModel
 ) {
     MovieList(
         modifier = modifier,
@@ -74,16 +80,16 @@ fun MainContent(
 fun MovieList(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: MoviesViewModel
+    viewModel: HomeScreenViewModel
 ) {
     val movieListState by viewModel.movieListState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     LazyColumn (
         modifier = modifier,
         contentPadding = PaddingValues(all = 12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-
         items(items = movieListState) { movieItem ->
             MovieRow(
                 movie = movieItem,
@@ -91,11 +97,11 @@ fun MovieList(
                     navController.navigate(Screen.DetailScreen.withId(movieId))
                 },
                 onFavClick  = { movie ->
-                    viewModel.updateFavoriteMovies(movie)
+                    coroutineScope.launch {
+                        viewModel.toggleFavoriteMovies(movie.id)
+                    }
                 }
             )
         }
     }
 }
-
-

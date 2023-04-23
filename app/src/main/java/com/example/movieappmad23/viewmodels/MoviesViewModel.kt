@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 // inherit from ViewModel class
-// inherit from ViewModel class
 class MoviesViewModel: ViewModel() {
     private val _movieListState = MutableStateFlow(listOf<Movie>())
     val movieListState: StateFlow<List<Movie>> = _movieListState.asStateFlow()
@@ -85,3 +84,5 @@ class MoviesViewModel: ViewModel() {
         }
     }
 }
+
+

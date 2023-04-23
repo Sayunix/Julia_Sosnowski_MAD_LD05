@@ -17,6 +17,9 @@ interface MovieDao {
     @Delete
     suspend fun delete(movie: Movie)
 
+    @Query("SELECT * from movie where id like :pk")
+    suspend fun getMovie(pk: String) : Movie
+
     //Flow ist eine Bibliothek in Kotlin, die es ermöglicht, asynchrone Datenströme (Streams) von
     //Daten zu verarbeiten und zu transformieren. Mit Flow können Sie auf Ereignisse reagieren,
     //die asynchron und unvorhersehbar auftreten können, wie z.B. Benutzerinteraktionen oder
@@ -24,13 +27,7 @@ interface MovieDao {
     @Query("SELECT * from movie")
     fun getAllMovies(): Flow<List<Movie>>
 
-    @Query("Select * from movie where isFavorite = 1")
-    fun getAllFavouriteMovies(): Flow<List<Movie>>
-
-    @Query("Select * from movie where id=:movieId")
-    fun getMovieById(movieId: String): Flow<Movie?>
-
-    @Query("SELECT * FROM movie WHERE isFavorite = 1")
+    @Query("SELECT * FROM movie where isFavorite = 1")
     fun getAllFavoriteMovies(): Flow<List<Movie>>
     //@Query("DELETE from Movie")
     //fun deleteAll()

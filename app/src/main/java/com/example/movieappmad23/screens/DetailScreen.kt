@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.movieappmad23.models.Movie
+import com.example.movieappmad23.viewmodels.DetailScreenViewModel
 import com.example.movieappmad23.viewmodels.MoviesViewModel
 import com.example.movieappmad23.widgets.HorizontalScrollableImageView
 import com.example.movieappmad23.widgets.MovieRow

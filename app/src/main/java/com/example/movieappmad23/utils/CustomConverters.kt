@@ -4,24 +4,15 @@ import androidx.room.TypeConverter
 import com.example.movieappmad23.models.Genre
 
 class CustomConverters {
+    @TypeConverter
+    fun stringListToString(value: List<String>) = value.joinToString(",")
 
     @TypeConverter
-    fun fromGenreList(genreList: List<Genre>): String {
-        return genreList.joinToString(separator = ",") { it.ordinal.toString() } //Weil Genre ein Enum ist müssen wir "ordinal" verwenden
-    }
+    fun stringToStringList(value: String) = value.split(",").map{ it.trim() }
 
     @TypeConverter
-    fun toGenreList(genreString: String): List<Genre> {
-        return genreString.split(",").map { Genre.values()[it.toInt()] }
-    }
+    fun enumListToString(value: List<Genre>) = value.joinToString(",") { it.name }
 
     @TypeConverter
-    fun fromStringList(stringList: List<String>): String {
-        return stringList.joinToString(separator = ",")
-    }
-
-    @TypeConverter
-    fun toStringList(stringListString: String): List<String> {
-        return stringListString.split(",")
-    }
+    fun stringToEnumList(value: String) = value.split(",").map { Genre.valueOf(it.trim()) }
 }
